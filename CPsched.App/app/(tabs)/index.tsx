@@ -13,24 +13,24 @@ import {Contest, getContests} from '@/api/contests';
 export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
 
+
+  async function setContests(){
+    setContestList(await getContests());
+    console.log(contestList);
+  }
+
   const onRefresh =() => {
-    setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
+    console.log("REFRESH")
+    setContests();
   }
 
   const [contestList , setContestList] = useState([]);
   useEffect(() => {
-    async function setContests(){
-      setContestList(await getContests());
-      console.log(contestList);
-    }
     setContests()
   },[setContestList])
 
   return (<View>
-    <ScrollView contentContainerStyle={styles.scrollViewContent} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => onRefresh} />}>
+    <ScrollView contentContainerStyle={styles.scrollViewContent} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => onRefresh()} />}>
       <View style={styles.centeredContent}>
         {contestList.map((c) => <ContestCard contest={c} key={c.id}/>)}
         {/* <ContestCard contest={Contest.fromJSON({"id":"93ee5d4b-e07b-43c3-b67d-3fd452376d1f","title":"Weekly Contest 431","start_time":1736044200.0,"duration":5400,"platform":"CC"})}/> */}
