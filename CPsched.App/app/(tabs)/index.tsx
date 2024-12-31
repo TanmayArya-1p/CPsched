@@ -1,69 +1,93 @@
-import { Image, StyleSheet, Platform, Text, View, ScrollView  , RefreshControl} from 'react-native';
 import React, { useEffect, useState } from 'react';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { View, ScrollView, RefreshControl, StyleSheet } from 'react-native';
+import { MotiView } from 'moti';
 import ContestCard from '@/components/ContestCard';
-import { StatusBar } from 'expo-status-bar';
-import {Contest, getContests} from '@/api/contests';
-
+import { getContests } from '@/api/contests';
 
 export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [contestList, setContestList] = useState([]);
 
-
-  async function setContests(){
-    setContestList(await getContests());
-    console.log(contestList);
+  async function setContests() {
+    setLoading(true);
+    const contests = await getContests();
+    setContestList(contests);
+    setLoading(false);
   }
 
-  const onRefresh =() => {
-    console.log("REFRESH")
+  const onRefresh = () => {
+    console.log("REFRESH");
     setContests();
   }
 
-  const [contestList , setContestList] = useState([]);
   useEffect(() => {
-    setContests()
-  },[setContestList])
+    setContests();
+  }, []);
 
-  return (<View>
-    <ScrollView contentContainerStyle={styles.scrollViewContent} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => onRefresh()} />}>
-      <View style={styles.centeredContent}>
-        {contestList.map((c) => <ContestCard contest={c} key={c.id}/>)}
-        {/* <ContestCard contest={Contest.fromJSON({"id":"93ee5d4b-e07b-43c3-b67d-3fd452376d1f","title":"Weekly Contest 431","start_time":1736044200.0,"duration":5400,"platform":"CC"})}/> */}
-      </View>
-    </ScrollView>
-    <StatusBar/>
+  return (
+    <View style={{ flex: 1, backgroundColor: 'black' }}>
+      <ScrollView
+        contentContainerStyle={{ padding: 16 }}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
+        {loading ? (
+          Array.from({ length: 10 }).map((_, index) => (
+            <MotiView
+              key={index}
+              from={{ opacity: 0.5 }}
+              animate={{ opacity: 1 }}
+              transition={{
+                type: 'timing',
+                duration: 1000,
+                loop: true,
+              }}
+              style={styles.skeletonContainer}
+            >
+              <View style={{ flex: 1 }}>
+                <View style={[styles.skeletonText, { width: '60%', height: 20 }]} />
+                <View style={[styles.skeletonText, { width: '40%', height: 20 }]} />
+              </View>
+              <View style={styles.skeletonImage} />
+            </MotiView>
+          ))
+        ) : (
+          contestList.map((contest, index) => (
+            <MotiView
+              key={index}
+              from={{ opacity: 0, translateY: -20 }}
+              animate={{ opacity: 1, translateY: 0 }}
+              transition={{ type: 'timing', duration: 500, delay: index * 100 }}
+            >
+              <ContestCard contest={contest} />
+            </MotiView>
+          ))
+        )}
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollViewContent: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  centeredContent: {
-    alignItems: 'center',
-  },
-  titleContainer: {
+  skeletonContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    padding: 16,
+    backgroundColor: '#2c2c2c',
+    borderRadius: 8,
+    marginBottom: 16,
+    height: 120,
   },
-  stepContainer: {
-    gap: 8,
+  skeletonText: {
+    backgroundColor: '#444',
+    borderRadius: 4,
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  skeletonImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#444',
+    marginLeft: 'auto',
   },
 });
