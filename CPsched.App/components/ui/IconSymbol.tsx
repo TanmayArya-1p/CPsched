@@ -11,7 +11,7 @@ const MAPPING = {
   // See SF Symbols in the SF Symbols app on Mac.
   'house.fill': 'emoji-events',
   'paperplane.fill': 'edit-notifications',
-  'chevron.left.forwardslash.chevron.right': 'code',
+  'chevron.left.forwardslash.chevron.right': 'add-alert',
   'chevron.right': 'chevron-right',
 } as Partial<
   Record<

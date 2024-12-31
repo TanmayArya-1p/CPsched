@@ -4,11 +4,11 @@ import { MotiView } from 'moti';
 import ContestCard from '@/components/ContestCard';
 import { getContests } from '@/api/contests';
 
+
 export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [contestList, setContestList] = useState([]);
-
   async function setContests() {
     setLoading(true);
     const contests = await getContests();
