@@ -55,7 +55,7 @@ export default function HomeScreen() {
           contestList.map((contest, index) => (
             <MotiView
               key={index}
-              from={{ opacity: 0, translateY: -20 }}
+              from={{ opacity: 0.5, translateY: -20 }}
               animate={{ opacity: 1, translateY: 0 }}
               transition={{ type: 'timing', duration: 500, delay: index * 100 }}
             >
