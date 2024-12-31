@@ -1,7 +1,7 @@
 import chromedriver_autoinstaller
 from fastapi import FastAPI
 from Services.schema import CODECHEF,CODEFORCES,LEETCODE
-from cache import lc_contests,cf_contests,cc_contests,cached_contests  
+from cache import lc_contests,cf_contests,cc_contests,cached_contests,redis_client  
 
 
 app = FastAPI()
@@ -13,3 +13,7 @@ async def contests():
 @app.on_event("startup")
 async def startup():
     chromedriver_autoinstaller.install()
+
+@app.on_event("shutdown")
+async def shutdown():
+    redis_client.close()
