@@ -12,7 +12,7 @@ import {
   useRecoilState,
   useRecoilValue,
 } from 'recoil';
- 
+
 
 export default function TabTwoScreen() {
   const [key, setKey] = useState(0);
@@ -44,7 +44,6 @@ export default function TabTwoScreen() {
         </Animated.View>
       </View>
       <ThemedText>Subscribe to recieve a reminder notification an hour before a contest</ThemedText>
-
     </ParallaxScrollView>
   );
 }

@@ -1,4 +1,8 @@
 {
+  "android": {
+  "package": "com.tcan.cpsched",
+  "versionCode": 1
+  },
   "expo": {
     "name": "CPsched.App",
     "slug": "CPsched.App",

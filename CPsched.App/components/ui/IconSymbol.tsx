@@ -13,6 +13,7 @@ const MAPPING = {
   'paperplane.fill': 'edit-notifications',
   'chevron.left.forwardslash.chevron.right': 'add-alert',
   'chevron.right': 'chevron-right',
+  'calendar' : 'event'
 } as Partial<
   Record<
     import('expo-symbols').SymbolViewProps['name'],
