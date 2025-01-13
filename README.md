@@ -1,1 +1,1 @@
-### Install the app [here](https://github.com/TanmayArya-1p/CPsched/releases/download/v1.0/app-release.apk)
+### Install the app [here](https://github.com/TanmayArya-1p/CPsched/releases)
