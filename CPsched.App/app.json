@@ -1,7 +1,7 @@
 {
   "android": {
-  "package": "com.tcan.cpsched",
-  "versionCode": 1
+    "package": "com.tcan.cpsched",
+    "versionCode": 1
   },
   "expo": {
     "name": "CPsched.App",
@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.tanmayarya2018.CPsched.App"
     },
     "web": {
       "bundler": "metro",

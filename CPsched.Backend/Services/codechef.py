@@ -4,6 +4,8 @@ from .schema import Contest, CODECHEF
 import time
 from datetime import datetime
 from selenium.webdriver.chrome.options import Options
+import shutil
+import selenium
 chrome_options = Options()
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--disable-gpu")
@@ -34,7 +36,15 @@ def fetch_contests(ses):
 
 
 async def contests():
-    driver = webdriver.Chrome(options=chrome_options)
+    try:
+        driver = webdriver.Chrome(options=chrome_options)
+    except selenium.common.exceptions.NoSuchDriverException:
+        chromedriver_path = shutil.which("chromedriver")
+        service = webdriver.ChromeService(executable_path=chromedriver_path)
+        driver = webdriver.Chrome(options=chrome_options, service=service)
+    
+    
+    #driver = webdriver.Chrome(options=chrome_options)
     driver.get("https://www.codechef.com/contests")
     sescookie = ""
     try:

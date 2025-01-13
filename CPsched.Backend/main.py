@@ -12,7 +12,8 @@ async def contests():
 
 @app.on_event("startup")
 async def startup():
-    chromedriver_autoinstaller.install()
+    #chromedriver_autoinstaller.install()
+    pass
 
 @app.on_event("shutdown")
 async def shutdown():

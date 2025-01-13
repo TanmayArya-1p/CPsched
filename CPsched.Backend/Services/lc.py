@@ -4,6 +4,8 @@ from datetime import datetime,timedelta
 import pytz
 from selenium.webdriver.chrome.options import Options
 from .schema import Contest , LEETCODE
+import shutil 
+import selenium
 chrome_options = Options()
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--disable-gpu")
@@ -32,7 +34,14 @@ def epoch_time(day_time_str):
 
 
 async def contests():
-    driver = webdriver.Chrome(options=chrome_options)
+    try:
+        driver = webdriver.Chrome(options=chrome_options)
+    except selenium.common.exceptions.NoSuchDriverException:
+        chromedriver_path = shutil.which("chromedriver")
+        service = webdriver.ChromeService(executable_path=chromedriver_path)
+        driver = webdriver.Chrome(options=chrome_options, service=service)
+    
+    #driver = webdriver.Chrome(options=chrome_options)
     driver.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {
         'source': '''
             Object.defineProperty(navigator, 'webdriver', {
