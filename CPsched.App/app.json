@@ -5,7 +5,7 @@
   },
   "expo": {
     "name": "CPsched.App",
-    "slug": "CPsched.App",
+    "slug": "CPsched",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -41,6 +41,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "a8f2e566-aaeb-4a48-b8d0-5f352e2450dd"
+      }
     }
   }
 }

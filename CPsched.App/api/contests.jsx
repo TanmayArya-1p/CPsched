@@ -4,7 +4,7 @@ let CODEFORCES = 'CF';
 let LEETCODE = 'LC';
 let CODECHEF = 'CC';
 
-let API_ENDPOINT = "http://192.168.0.111:8000/contests"
+let API_ENDPOINT = "https://cpsched.onetincan.tech/contests"
 
 class Contest {
   constructor(title, startTime, duration, platform, id) {
