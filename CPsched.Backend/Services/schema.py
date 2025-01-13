@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-CODEFORCES,CODECHEF,LEETCODE = 'CF','LC','CC'
+CODEFORCES,CODECHEF,LEETCODE = 'CF','CC','LC'
 class Contest:
     def __init__(self,title : str,start_time : datetime,duration : int,platform : str,id=None):
         if id:
@@ -14,9 +14,9 @@ class Contest:
         self.platform = platform
 
     def __str__(self):
-        return f"{self.title} {self.start_time} {self.duration} {self.questions}"
+        return f"{self.title} {self.start_time} {self.duration} {self.platform}"
     def __repr__(self):
-        return f"Contest({self.title} {self.start_time} {self.duration} {self.questions})"
+        return f"Contest({self.title} {self.start_time} {self.duration} {self.platform})"
     
     def json(self):
         return {
