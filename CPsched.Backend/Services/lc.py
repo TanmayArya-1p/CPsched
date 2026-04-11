@@ -1,4 +1,5 @@
 from time import sleep
+import time
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import pytz
@@ -24,6 +25,7 @@ chrome_options.add_experimental_option('useAutomationExtension', False)
 CONTEST_DURATION = 90 * 60
 TMZ = "Asia/Kolkata"
 WAIT_UNTIL_XPATH = "//a[starts-with(@href, '/contest/')]"
+PAGE_WAIT_TIME = 10
 
 def epoch_time(day_time_str):
     dt_naive = parser.parse(day_time_str, fuzzy=True, ignoretz=True)
@@ -68,6 +70,7 @@ async def contests():
         WebDriverWait(driver, 20).until(
             EC.presence_of_element_located((By.XPATH, WAIT_UNTIL_XPATH))
         )
+        time.sleep(PAGE_WAIT_TIME)
     except:
         pass
 
