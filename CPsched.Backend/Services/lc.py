@@ -2,7 +2,6 @@ from time import sleep
 import time
 from selenium import webdriver
 from bs4 import BeautifulSoup
-import pytz
 from dateutil import parser
 from selenium.webdriver.chrome.options import Options
 from .schema import Contest , LEETCODE
@@ -23,14 +22,12 @@ chrome_options.add_experimental_option('useAutomationExtension', False)
 
 
 CONTEST_DURATION = 90 * 60
-TMZ = "Asia/Kolkata"
 WAIT_UNTIL_XPATH = "//a[starts-with(@href, '/contest/')]"
 PAGE_WAIT_TIME = 10
 
 def epoch_time(day_time_str):
-    dt_naive = parser.parse(day_time_str, fuzzy=True, ignoretz=True)
-    tz = pytz.timezone(TMZ)
-    dt_aware = tz.localize(dt_naive)
+    day_time_str = day_time_str.replace("GMT", "")
+    dt_aware = parser.parse(day_time_str, fuzzy=True)
     return dt_aware
 
 
