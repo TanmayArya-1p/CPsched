@@ -1,11 +1,16 @@
-from selenium import webdriver 
+from time import sleep
+from selenium import webdriver
 from bs4 import BeautifulSoup
-from datetime import datetime,timedelta
 import pytz
+from dateutil import parser
 from selenium.webdriver.chrome.options import Options
 from .schema import Contest , LEETCODE
-import shutil 
+import shutil
 import selenium
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 chrome_options = Options()
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--disable-gpu")
@@ -17,20 +22,14 @@ chrome_options.add_experimental_option('useAutomationExtension', False)
 
 
 CONTEST_DURATION = 90 * 60
+TMZ = "Asia/Kolkata"
+WAIT_UNTIL_XPATH = "//a[starts-with(@href, '/contest/')]"
 
 def epoch_time(day_time_str):
-    day_time_str = " ".join(day_time_str.split(" ")[:-1])
-    date_format = "%A %I:%M %p"
-    dt_naive = datetime.strptime(day_time_str, date_format)
-    now = datetime.now()
-    dt_with_date = dt_naive.replace(year=now.year, month=now.month, day=now.day)
-    while dt_with_date.strftime('%A') != day_time_str.split()[0]:
-        dt_with_date += timedelta(days=1)
-    tz = pytz.timezone('Asia/Kolkata')
-    dt_aware = tz.localize(dt_with_date)
+    dt_naive = parser.parse(day_time_str, fuzzy=True, ignoretz=True)
+    tz = pytz.timezone(TMZ)
+    dt_aware = tz.localize(dt_naive)
     return dt_aware
-
-
 
 
 async def contests():
@@ -40,7 +39,7 @@ async def contests():
         chromedriver_path = shutil.which("chromedriver")
         service = webdriver.ChromeService(executable_path=chromedriver_path)
         driver = webdriver.Chrome(options=chrome_options, service=service)
-    
+
     #driver = webdriver.Chrome(options=chrome_options)
     driver.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {
         'source': '''
@@ -62,17 +61,25 @@ async def contests():
     driver.execute_cdp_cmd('Network.setUserAgentOverride', {
         "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36"
     })
+
     driver.get("https://leetcode.com/contest/")
+
+    try:
+        WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.XPATH, WAIT_UNTIL_XPATH))
+        )
+    except:
+        pass
+
     sp = BeautifulSoup(driver.page_source, 'html.parser')
     contest_links = sp.find_all('a', href=lambda href: href and href.startswith('/contest/'))
-    filtered_links = list(filter(lambda i: not("ended" in i.text.lower()) and len(i.find_all("div" , recursive=False)) == 2  , contest_links))
+    filtered_links = list(filter(lambda i: not("ended" in i.text.lower()) and len(i.parent.find_all("p" , recursive=True)) == 2  , contest_links))
     driver.close()
     otpt = []
     for i in filtered_links:
-        inner = i.text
-        title = i.find("span").text
-        pos = inner.index(title)
-        date = inner[pos+len(title):]
+        parent = i.parent
+        title = parent.find("p", recursive=True).text
+        date = parent.find_all("p", recursive=True)[1].text
         otpt.append(Contest(title,epoch_time(date),CONTEST_DURATION,LEETCODE))
     return otpt
 
